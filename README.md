@@ -7,8 +7,8 @@ Author: Mathieu LANGUMIER
 ### MVP
 - [x] Maven project
 - [x] Use a `FakeDatabase.java` to generate fake data
-- [ ] Books: id, title, author, releaseDate, genre
-- [ ] Critic: username, bookId, rating, review, date
+- [x] Books: id, title, author, releaseDate, genre
+- [x] Critic: username, bookId, rating, review, date
 - [ ] Stream API
   - [ ] List books (sort by rating, desc)
   - [ ] List reviews from a specific author (sort by date, desc)
