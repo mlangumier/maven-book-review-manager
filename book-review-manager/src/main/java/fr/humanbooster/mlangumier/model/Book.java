@@ -1,11 +1,13 @@
 package fr.humanbooster.mlangumier.model;
 
 public class Book {
-    private Long id = 0L;
+    private Long id;
     private String title;
     private String author;
     private int releaseDate;
     private Genre genre;    // Bonus: transform into -> private Set<Genre> genres;
+
+    private static Long counter = 0L;
 
     /**
      * Constructor - Create a new book
@@ -16,7 +18,7 @@ public class Book {
      * @param genre Genre of the book
      */
     public Book(String title, String author, int releaseDate, Genre genre) {
-        this.id++;
+        this.id = ++counter;
         this.title = title;
         this.author = author;
         this.releaseDate = releaseDate;

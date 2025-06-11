@@ -9,6 +9,13 @@ import java.util.List;
 
 public class FakeDatabase {
     /**
+     * Constructor - Ignored
+     */
+    private FakeDatabase() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
      * Create a list of books
      *
      * @return A new list of books
