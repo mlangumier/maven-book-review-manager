@@ -1,16 +1,11 @@
 package fr.humanbooster.mlangumier;
 
-import fr.humanbooster.mlangumier.model.Book;
-import fr.humanbooster.mlangumier.model.Genre;
+import fr.humanbooster.mlangumier.model.Order;
 import fr.humanbooster.mlangumier.model.Review;
 import fr.humanbooster.mlangumier.service.BookService;
 import fr.humanbooster.mlangumier.service.ReviewService;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.Comparator;
 
 /**
  * Hello world!
@@ -22,42 +17,27 @@ public class App {
         BookService bookService = new BookService();
         ReviewService reviewService = new ReviewService();
 
-        // TODO - List books (sort by average rating, desc)
+        System.out.println(">>> 1. Get books and their average rating (ordered by rating, desc)");
+        bookService
+                .sortBooksByAverageRatings(bookService.getBooksAndAverageRatings(), Order.DESC)
+                .forEach((key, value) -> System.out.printf("- %s (%s) %n", key.getTitle(), value));
 
-        // 1. Calculate average ratings per bookId
-        Map<Long, Double> avgRatingByBookId = reviewService.getReviews()
-                .stream()
-                .collect(
-                        Collectors.groupingBy(
-                                Review::getBookId, // Replace by method: `Book getBookById(Long id){}` // bookService.getBooks().stream().filter().toList().get(0)
-                                Collectors.averagingDouble(Review::getRating)
-                        ));
+        System.out.println("\n>>> 2. Get all reviews written by a given reviewer (ordered by date, desc)");
+        reviewService
+                .sortReviewsByDate(reviewService.getReviewsByUsername("Alice"), Order.DESC)
+                .forEach(review -> System.out.printf(
+                        "- Book: \"%s\" | Review: \"%s\" | Rating: %s | Written: %s %n",
+                        bookService.getBookById(review.getBookId()).getTitle(), review.getText(), review.getRating(), review.getDate()
+                ));
 
-        // 2. Get books by bookID and replace in map // Not needed after rework
-        Map<Book, Double> avgRatingByBook = avgRatingByBookId.entrySet()
-                .stream()
-                .collect(
-                        Collectors.toMap(
-                                entry -> bookService.getBooks().stream().filter(book -> book.getId().equals(entry.getKey())).toList().get(0),
-                                Map.Entry::getValue
-                        ));
+        // TODO - 3. For each genre, get the book with the highest rating (sort by rating, desc)
 
-        // 3. Return the ordered list (param: ORDER.ASC / ORDER.DESC)
-        Map<Book, Double> sortedAvgRatingByBook = avgRatingByBook.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).toList();
+        // TODO - 4. List reviews for books released before a given date
 
-        // TODO - List reviews from a specific author (sort by date, desc)
-        List<Review> reviewFromAuthor = reviewService.getReviews().stream().filter(review -> review.getUsername().equals("Alice")).toList();
-        System.out.println("\n>> Reviews by Alice: \n" + reviewFromAuthor);
+        // TODO - 5. Book - Get books released before [date]
 
-        // TODO - For each genre, get the book with the highest rating (sort by rating, desc)
+        // TODO - 6. Reviews - Get reviews for all books (or IDs?) from list
 
-        // TODO - List reviews for books released before a given date
-
-        // TODO - Book - Get books released before [date]
-
-        // TODO - Reviews - Get reviews for all books (or IDs?) from list
-
-        // TODO - Display the number of books and the average rating of each genre
+        // TODO - 7. Display the number of books and the average rating of each genre
     }
 }

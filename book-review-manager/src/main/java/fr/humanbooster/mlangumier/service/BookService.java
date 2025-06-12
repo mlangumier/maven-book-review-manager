@@ -2,8 +2,13 @@ package fr.humanbooster.mlangumier.service;
 
 import fr.humanbooster.mlangumier.data.FakeDatabase;
 import fr.humanbooster.mlangumier.model.Book;
+import fr.humanbooster.mlangumier.model.Order;
 
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BookService {
     List<Book> books;
@@ -30,10 +35,50 @@ public class BookService {
      * @return the book found.
      */
     public Book getBookById(Long bookId) {
-        return books.stream()
+        return books
+                .stream()
                 .filter(book -> book.getId().equals(bookId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * Gets a list of books and their average ratings.
+     *
+     * @return A list of books and their average rating.
+     */
+    public Map<Book, Double> getBooksAndAverageRatings() {
+        return books
+                .stream()
+                .collect(Collectors.toMap(
+                        book -> book,
+                        book -> new ReviewService().getAverageRatingsForBook(book.getId())
+                ));
+    }
+
+    /**
+     * Sorts a list of books by their average rating
+     *
+     * @param booksAndAverageRatings A list of books and ratings
+     * @param order                  The sorting order (ascending or descending)
+     * @return The list of books sorted by their average rating, in ascending or descending order.
+     */
+    public Map<Book, Double> sortBooksByAverageRatings(Map<Book, Double> booksAndAverageRatings, Order order) {
+        Order sortOrder = order == null ? Order.DESC : order;
+
+        return booksAndAverageRatings
+                .entrySet()
+                .stream()
+                .sorted(
+                        sortOrder == Order.ASC
+                                ? Map.Entry.comparingByValue()
+                                : Map.Entry.comparingByValue(Comparator.reverseOrder())
+                )
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new)
+                );
     }
 
     @Override
