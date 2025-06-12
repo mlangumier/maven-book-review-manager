@@ -23,6 +23,19 @@ public class BookService {
         this.books = books;
     }
 
+    /**
+     * Find a book by looking up its id.
+     *
+     * @param bookId id of the book
+     * @return the book found.
+     */
+    public Book getBookById(Long bookId) {
+        return books.stream()
+                .filter(book -> book.getId().equals(bookId))
+                .findFirst()
+                .orElse(null);
+    }
+
     @Override
     public String toString() {
         return "BookService{" +
