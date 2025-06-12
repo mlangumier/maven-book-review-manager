@@ -27,26 +27,32 @@ public class ReviewService {
     }
 
     /**
+     * Get the reviews written by a user
      *
-     * @param username
-     * @return
+     * @param username the name of the user we want the reviews from
+     * @return a list of reviews written by the user
      */
     public List<Review> getReviewsByUsername(String username) {
         return reviews
                 .stream()
                 .filter(review -> review.getUsername().equals(username))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
+     * Sort a list of reviews by their publication date
      *
-     * @param order
-     * @return
+     * @param order The sorting order (ascending or descending)
+     * @return The list of reviews sorted by their publication date, in ascending or descending order.
      */
     public List<Review> sortReviewsByDate(List<Review> reviews, Order order) {
         return reviews
                 .stream()
-                .sorted(Comparator.comparing(Review::getDate).reversed())
+                .sorted(
+                        order == Order.ASC
+                                ? Comparator.comparing(Review::getDate)
+                                : Comparator.comparing(Review::getDate).reversed()
+                )
                 .toList();
     }
 

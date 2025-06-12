@@ -1,6 +1,5 @@
 package fr.humanbooster.mlangumier.service;
 
-import fr.humanbooster.mlangumier.data.FakeDatabase;
 import fr.humanbooster.mlangumier.model.Book;
 import fr.humanbooster.mlangumier.model.Order;
 
@@ -11,13 +10,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BookService {
-    List<Book> books;
+    private List<Book> books;
+    protected ReviewService reviewService;
 
     /**
      * Constructor
+     * @param books A list of books
+     * @param reviewService allows access to the methods from the service
      */
-    public BookService() {
-        this.books = FakeDatabase.getBooks();
+    public BookService(List<Book> books, ReviewService reviewService) {
+        this.books = books;
+        this.reviewService = reviewService;
     }
 
     public List<Book> getBooks() {
@@ -52,7 +55,7 @@ public class BookService {
                 .stream()
                 .collect(Collectors.toMap(
                         book -> book,
-                        book -> new ReviewService().getAverageRatingsForBook(book.getId())
+                        book -> this.reviewService.getAverageRatingsForBook(book.getId())
                 ));
     }
 
