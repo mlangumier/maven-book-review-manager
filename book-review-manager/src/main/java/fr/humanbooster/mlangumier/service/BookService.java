@@ -15,7 +15,8 @@ public class BookService {
 
     /**
      * Constructor
-     * @param books A list of books
+     *
+     * @param books         A list of books
      * @param reviewService allows access to the methods from the service
      */
     public BookService(List<Book> books, ReviewService reviewService) {
@@ -43,6 +44,20 @@ public class BookService {
                 .filter(book -> book.getId().equals(bookId))
                 .findFirst()
                 .orElse(null);
+    }
+
+
+    /**
+     * Get all the books that were released before a given year (exclusive)
+     * @param year Year of the release we want to check
+     * @return a list of books ordered by release date (descending)
+     */
+    public List<Book> getBooksReleasedBeforeYear(int year) {
+        return books
+                .stream()
+                .filter(book -> book.getReleaseDate() > year)
+                .sorted(Comparator.comparing(Book::getReleaseDate).reversed())
+                .toList();
     }
 
     /**

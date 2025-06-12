@@ -40,6 +40,19 @@ public class ReviewService {
     }
 
     /**
+     * Get reviews written about a given book
+     * @param bookId id of the book that the reviews are about
+     * @return a list of reviews sorted by the date they were written (descending)
+     */
+    public List<Review> getReviewsOfBookId(Long bookId) {
+        return reviews
+                .stream()
+                .filter(review -> review.getBookId().equals(bookId))
+                .sorted(Comparator.comparing(Review::getDate).reversed())
+                .toList();
+    }
+
+    /**
      * Sort a list of reviews by their publication date
      *
      * @param order The sorting order (ascending or descending)
