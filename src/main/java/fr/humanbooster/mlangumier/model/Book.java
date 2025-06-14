@@ -5,7 +5,7 @@ public class Book {
     private String title;
     private String author;
     private int releaseDate;
-    private Genre genre;    // Bonus: transform into -> private Set<Genre> genres;
+    private Genre genre;
 
     private static Long counter = 0L;
 

@@ -2,11 +2,9 @@ package fr.humanbooster.mlangumier.service;
 
 import fr.humanbooster.mlangumier.model.Book;
 import fr.humanbooster.mlangumier.model.Order;
+import fr.humanbooster.mlangumier.model.Review;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BookService {
@@ -49,6 +47,7 @@ public class BookService {
 
     /**
      * Get all the books that were released before a given year (exclusive)
+     *
      * @param year Year of the release we want to check
      * @return a list of books ordered by release date (descending)
      */
@@ -58,6 +57,22 @@ public class BookService {
                 .filter(book -> book.getReleaseDate() > year)
                 .sorted(Comparator.comparing(Book::getReleaseDate).reversed())
                 .toList();
+    }
+
+
+    /**
+     * Get the reviews from a list of books and groups them together.
+     *
+     * @param bookList a list of books for which we want to get the reviews
+     * @return a list {map} containing the books {key} and their reviews {values}
+     */
+    public Map<Book, List<Review>> getBooksAndTheirReviews(List<Book> bookList) {
+        return bookList
+                .stream()
+                .collect(Collectors.toMap(
+                        book -> book,
+                        book -> reviewService.getReviewsOfBookId(book.getId())
+                ));
     }
 
     /**
