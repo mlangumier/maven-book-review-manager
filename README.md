@@ -2,6 +2,20 @@
 
 Author: Mathieu LANGUMIER
 
+## Install & Start
+
+Clone the project and enter the repository:  
+```shell
+  git clone https://github.com/mlangumier/maven-book-review-manager.git
+  cd maven-book-review-manager
+```
+
+Then use the following commands to compile and start the project: 
+```shell
+  mvn clean install
+  mvn exec:java
+```
+
 ## Features
 
 ### MVP

@@ -4,11 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>fr.humanbooster.mlangumier</groupId>
-  <artifactId>book-review-manager</artifactId>
+  <artifactId>exam-book-review-manager</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>book-review-manager</name>
-  <!-- FIXME change it to the project's website -->
+  <name>exam-book-review-manager</name>
   <url>http://www.example.com</url>
 
   <properties>
@@ -83,6 +82,14 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.6.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <mainClass>fr.humanbooster.mlangumier.App</mainClass>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

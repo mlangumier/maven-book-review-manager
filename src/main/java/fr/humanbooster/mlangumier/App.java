@@ -7,13 +7,11 @@ import fr.humanbooster.mlangumier.model.Review;
 import fr.humanbooster.mlangumier.service.BookService;
 import fr.humanbooster.mlangumier.service.ReviewService;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -63,5 +61,7 @@ public class App {
         //----------
         //TODO - 5. Display the number of books and the average rating of each genre
         // System.out.println("\n>>> 7. Display the number of books and average score of each genre");
+
+        System.out.println("\n========== APP CLOSED ==========\n");
     }
 }
