@@ -46,7 +46,7 @@ public class App {
                 ));
 
         //----------
-         System.out.println("\n>>> 3. Display the book with the highest rating for each genre (ordered by rating, desc)");
+        System.out.println("\n>>> 3. Display the book with the highest rating for each genre (ordered by rating, desc)");
 
         Map<Genre, Book> bestBookByGenre = bookService.getBestBookOfEachGenre();
 
@@ -62,10 +62,22 @@ public class App {
                 .forEach((book, reviews) -> System.out.printf("- Reviews for \"%s\": %n%s %n", book.getTitle(), reviews.toString()));
 
         //----------
-        //TODO - 5. Display the number of books and the average rating of each genre
-        // System.out.println("\n>>> 7. Display the number of books and average score of each genre");
-        // collect(Collectors.groupingBy(book -> book.getGenre())); Map<Genre, List<Book>;
-        // collect(Collectors.toMap(genre -> genre, avgRating -> collect(Collectors.averagingDouble(Review::getRating)))
+        System.out.println("\n>>> 5. Display the number of books and average score of each genre");
+
+        Map<Genre, List<Book>> booksByGenre = bookService.getBooksGroupedByGenre();
+
+        booksByGenre
+                .forEach((genre, books) -> System.out.printf(
+                        "- %s | Avg. Rating: %s | Nbr of books: %s %n",
+                        genre.label,
+                        books
+                                .stream()
+                                .mapToDouble(book -> reviewService.getAverageRatingsForBook(book.getId()))
+                                .average()
+                                .orElseThrow(NoSuchElementException::new),
+                        books.size()
+                ));
+
         System.out.println("\n========== APP CLOSED ==========\n");
     }
 }

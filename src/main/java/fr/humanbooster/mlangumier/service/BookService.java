@@ -51,6 +51,8 @@ public class BookService {
      * @return the highest rated book
      */
     public Book getBookWithHighestAverageRating(List<Book> books) {
+        //INFO: If unintended behaviour with `.max().orElseThrow()`, use `.sortedBy().limit()` instead.
+
         return books
                 .stream()
                 .max(Comparator.comparing(book -> reviewService.getAverageRatingsForBook(book.getId())))
@@ -96,7 +98,7 @@ public class BookService {
                 .stream()
                 .collect(Collectors.toMap(
                         book -> book,
-                        book -> this.reviewService.getAverageRatingsForBook(book.getId())
+                        book -> this.reviewService.getAverageRatingsForBook(book.getId()) //
                 ));
     }
 
