@@ -23,12 +23,12 @@ Then use the following commands to compile and start the project:
 - [x] Use a `FakeDatabase.java` to generate fake data
 - [x] Books: id, title, author, releaseDate, genre
 - [x] Critic: username, bookId, rating, review, date
-- [ ] Stream API
+- [x] Stream API
   - [x] List books (sort by rating, desc)
   - [x] List reviews from a specific author (sort by date, desc)
   - [x] For each genre, get the book with the highest rating (sort by rating, desc)
   - [x] List reviews from books released before a given date
-  - [ ] Display the number of books and the average rating of each genre
+  - [x] Display the number of books and the average rating of each genre
 
 ### Bonuses
 - [ ] CLI: to add books or reviews

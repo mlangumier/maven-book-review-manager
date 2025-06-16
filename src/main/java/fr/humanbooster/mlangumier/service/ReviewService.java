@@ -1,11 +1,11 @@
 package fr.humanbooster.mlangumier.service;
 
-import fr.humanbooster.mlangumier.data.FakeDatabase;
-import fr.humanbooster.mlangumier.model.Order;
+import fr.humanbooster.mlangumier.model.Book;
 import fr.humanbooster.mlangumier.model.Review;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class ReviewService {
@@ -14,8 +14,8 @@ public class ReviewService {
     /**
      * Constructor
      */
-    public ReviewService() {
-        this.reviews = FakeDatabase.getReviews();
+    public ReviewService(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     public List<Review> getReviews() {
@@ -33,39 +33,24 @@ public class ReviewService {
      * @return a list of reviews written by the user
      */
     public List<Review> getReviewsByUsername(String username) {
-        return reviews
+        return this.getReviews()
                 .stream()
                 .filter(review -> review.getUsername().equals(username))
-                .toList();
-    }
-
-    /**
-     * Get reviews written about a given book
-     * @param bookId id of the book that the reviews are about
-     * @return a list of reviews sorted by the date they were written (descending)
-     */
-    public List<Review> getReviewsOfBookId(Long bookId) {
-        return reviews
-                .stream()
-                .filter(review -> review.getBookId().equals(bookId))
                 .sorted(Comparator.comparing(Review::getDate).reversed())
                 .toList();
     }
 
     /**
-     * Sort a list of reviews by their publication date
+     * Get reviews written about a given book
      *
-     * @param order The sorting order (ascending or descending)
-     * @return The list of reviews sorted by their publication date, in ascending or descending order.
+     * @param bookId id of the book that the reviews are about
+     * @return a list of reviews sorted by the date they were written (descending)
      */
-    public List<Review> sortReviewsByDate(List<Review> reviews, Order order) {
-        return reviews
+    public List<Review> getReviewsOfBookId(Long bookId) {
+        return this.getReviews()
                 .stream()
-                .sorted(
-                        order == Order.ASC
-                                ? Comparator.comparing(Review::getDate)
-                                : Comparator.comparing(Review::getDate).reversed()
-                )
+                .filter(review -> review.getBookId().equals(bookId))
+                .sorted(Comparator.comparing(Review::getDate).reversed())
                 .toList();
     }
 
@@ -76,10 +61,24 @@ public class ReviewService {
      * @return the average rating of the book
      */
     public Double getAverageRatingsForBook(Long bookId) {
-        return reviews
+        return this.getReviews()
                 .stream()
                 .filter(review -> review.getBookId().equals(bookId))
                 .collect(Collectors.averagingDouble(Review::getRating));
+    }
+
+    /**
+     * Gets the average overall score from the reviews written about multiple books
+     *
+     * @param books A list of book for which we want the ratings
+     * @return the average rating for this list of books
+     */
+    public Double getAverageRatingsForBooks(List<Book> books) {
+        return books
+                .stream()
+                .mapToDouble(book -> this.getAverageRatingsForBook(book.getId()))
+                .average()
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override

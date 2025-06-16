@@ -66,7 +66,7 @@ public class BookService {
      * @return a list of books ordered by release date (descending)
      */
     public List<Book> getBooksReleasedBeforeYear(int year) {
-        return books
+        return this.getBooks()
                 .stream()
                 .filter(book -> book.getReleaseDate() > year)
                 .sorted(Comparator.comparing(Book::getReleaseDate).reversed())
@@ -94,11 +94,11 @@ public class BookService {
      * @return A list of books and their average rating.
      */
     public Map<Book, Double> getBooksAndAverageRatings() {
-        return books
+        return this.getBooks()
                 .stream()
                 .collect(Collectors.toMap(
                         book -> book,
-                        book -> this.reviewService.getAverageRatingsForBook(book.getId()) //
+                        book -> this.reviewService.getAverageRatingsForBook(book.getId()) // Use map & reduce?
                 ));
     }
 
@@ -108,7 +108,7 @@ public class BookService {
      * @return a list {HashMap} of genre and the books of this genre
      */
     public Map<Genre, List<Book>> getBooksGroupedByGenre() {
-        return books
+        return this.getBooks()
                 .stream()
                 .collect(Collectors.groupingBy(Book::getGenre));
     }
@@ -120,13 +120,15 @@ public class BookService {
      * @return a list {hashMap} of genres and their highest rated book
      */
     public Map<Genre, Book> getBestBookOfEachGenre() {
+        //INFO: If a version of this method with parameters if needed, use method Overload.
+
         return this.getBooksGroupedByGenre().entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> this.getBookWithHighestAverageRating(entry.getValue())
                 ));
-    } // If a version of this method with parameters if needed, use method Overload.
+    }
 
     /**
      * Sorts a list of books by their average rating
