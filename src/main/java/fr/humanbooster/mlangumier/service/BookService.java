@@ -1,6 +1,7 @@
 package fr.humanbooster.mlangumier.service;
 
 import fr.humanbooster.mlangumier.model.Book;
+import fr.humanbooster.mlangumier.model.Genre;
 import fr.humanbooster.mlangumier.model.Order;
 import fr.humanbooster.mlangumier.model.Review;
 
@@ -44,6 +45,17 @@ public class BookService {
                 .orElse(null);
     }
 
+    /**
+     * Get the book with the highest rating (average from the reviews).
+     *
+     * @return the highest rated book
+     */
+    public Book getBookWithHighestAverageRating(List<Book> books) {
+        return books
+                .stream()
+                .max(Comparator.comparing(book -> reviewService.getAverageRatingsForBook(book.getId())))
+                .orElseThrow(NoSuchElementException::new);
+    }
 
     /**
      * Get all the books that were released before a given year (exclusive)
@@ -58,7 +70,6 @@ public class BookService {
                 .sorted(Comparator.comparing(Book::getReleaseDate).reversed())
                 .toList();
     }
-
 
     /**
      * Get the reviews from a list of books and groups them together.
@@ -88,6 +99,32 @@ public class BookService {
                         book -> this.reviewService.getAverageRatingsForBook(book.getId())
                 ));
     }
+
+    /**
+     * Get all the genres and their corresponding books
+     *
+     * @return a list {HashMap} of genre and the books of this genre
+     */
+    public Map<Genre, List<Book>> getBooksGroupedByGenre() {
+        return books
+                .stream()
+                .collect(Collectors.groupingBy(Book::getGenre));
+    }
+
+    /**
+     * Get the books with the highest average review score for each genre.
+     * Uses the method {@link #getBooksGroupedByGenre() getBooksGroupedByGenre} to group the books by genre.
+     *
+     * @return a list {hashMap} of genres and their highest rated book
+     */
+    public Map<Genre, Book> getBestBookOfEachGenre() {
+        return this.getBooksGroupedByGenre().entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> this.getBookWithHighestAverageRating(entry.getValue())
+                ));
+    } // If a version of this method with parameters if needed, use method Overload.
 
     /**
      * Sorts a list of books by their average rating
